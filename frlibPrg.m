@@ -54,6 +54,20 @@ classdef frlibPrg
             self.defaultRedOpts = [];
             
         end
+        
+        function [A,b,c,K] = toMosek(self)
+          A = self.cone.Desymmetrize(self.A);
+          c = self.cone.Desymmetrize(self.c(:)')';
+          b = self.b;
+          K = self.K;
+          if K.q == 0
+            K.q = [];
+          end
+          if K.r == 0
+            K.r = [];
+          end
+          K.s = K.s(K.s > 0);
+        end
 
         function [x,y,info] = Solve(self,pars)
 
