@@ -34,10 +34,12 @@ while(1)
     M = solUtil.mat( Mvect);
     [M,cliques] = BinaryPsdCompletion(M);
     Mvect = M(:)';
-    [~,indx] = find(Mvect);
-    [keep,~] = find(Apsd(:,indx));
+%     [~,indx] = find(Mvect);
+%     [keep,~] = find(Apsd(:,indx));
 
-    tau(keep) = 1;
+%     tau(keep) = 1;
+    tau(any(Apsd(:,Mvect>0)~=0,2)) = 1;
+
     if all(tau == tauPrev)
         break;
     else
