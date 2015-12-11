@@ -4,7 +4,6 @@ c = c(:)';
 if nnz(c(1:K.f)) > 0
 %    error('Cannot eliminate free variables if they appear in objective');
 end
-
 if K.q + K.r  > 0
     error('Lorentz cone constraints not yet supported.');
 end
@@ -20,10 +19,19 @@ Kin = coneBase.cleanK(Kin);
 [c,K] = ConsolidateLinearAndPSDConstraints(c,K);
 
 if (Kin.f > 0)
-    [Apsd,b] = EliminateFreeVars([Ain(:,1:Kin.f),Apsd],b,Kin.f);
-end
 
-t = coneBase(K);
+    c = c(:)';
+    if nnz(cin(1:Kin.f)) > 0
+      Af = Ain(:,1:Kin.f);
+      [spleft] = spspaces(Af,1,eps);
+       M=spleft{1}(spleft{2},:);
+       Afinv = (M*Af)^-1*M;
+       c = c-cin(1:Kin.f)*Afinv*Apsd;
+       % error('Cannot eliminate free variables if they appear in objective');
+    end
+    [Apsd,b] = EliminateFreeVars([Ain(:,1:Kin.f),Apsd],b,Kin.f);
+ 
+end
 
 tau = double(b~=0);
 tauPrev = tau;
