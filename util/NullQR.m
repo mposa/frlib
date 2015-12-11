@@ -12,9 +12,20 @@ function [nullA,rangeAt] = NullQR(A,eps)
       if norm(A*nullA,'fro') > eps*1e-2
         warning('Null space failed A*nullA check in NullQR, reverting to qr')
       elseif any(sum(nullA.*nullA,1) < 1e-2)
-        warning('Null space appears to have a near-zero column, reverting to qr')
+        warning('Null space appears to have a near-zero column in NullQR, reverting to qr')
+      elseif sprank(nullA) < size(nullA,2)
+        warning('Null space is not full rank in NullQR, reverting to qr ')
+      elseif sprank(rangeAt) < size(rangeAt,2)
+        warning('A^T range is not full rank in NullQR, reverting to qr')
       else
-        return;
+        % check residual on rangeAt
+        x_test = A'*randn(size(A,1),1); 
+        resid = norm(rangeAt*(rangeAt\x_test) - x_test);
+        if resid > eps*1e-2
+          warning('A^T range failed randomized test in NullQR, reverting to qr')
+        else
+          return;
+        end
       end
     end
     
