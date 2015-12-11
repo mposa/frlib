@@ -6,9 +6,10 @@ function [nullA,rangeAt] = NullQR(A,eps)
     
     if exist('spspaces','file') == 2
       % from http://fr.mathworks.com/matlabcentral/fileexchange/11120-null-space-of-a-sparse-matrix
-      [spleft] = spspaces(A',1,1e-12);
+      [spleft] = spspaces(A',1,eps);
       nullA=spleft{1}(spleft{3},:)';
       rangeAt=spleft{4}(:,spleft{2});
+      return;
     end
     
     n = size(A,1);
