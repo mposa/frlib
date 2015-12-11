@@ -9,7 +9,13 @@ function [nullA,rangeAt] = NullQR(A,eps)
       [spleft] = spspaces(A',1,eps);
       nullA=spleft{1}(spleft{3},:)';
       rangeAt=spleft{4}(:,spleft{2});
-      return;
+      if norm(A*nullA,'fro') > eps*1e-2
+        warning('Null space failed A*nullA check in NullQR, reverting to qr')
+      elseif any(sum(nullA.*nullA,1) < 1e-2)
+        warning('Null space appears to have a near-zero column, reverting to qr')
+      else
+        return;
+      end
     end
     
     n = size(A,1);
