@@ -30,7 +30,7 @@ tauPrev = tau;
 
 while(1)
 
-    Mvect = any(Apsd(tau~=0,:)) | c;
+    Mvect = any(Apsd(tau~=0,:),1) | c;
     M = solUtil.mat( Mvect);
     [M,cliques] = BinaryPsdCompletion(M);
     Mvect = M(:)';
