@@ -31,8 +31,6 @@ function [nullA,rangeAt] = NullQR(A,eps)
     nullA = q(:,indxNull);
     Atperm = A(e,:)';
     rangeAt = Atperm(:,setdiff(1:n,indxNull));
-   keyboard
-
 
 
 
